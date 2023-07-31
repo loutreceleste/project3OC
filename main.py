@@ -1,6 +1,7 @@
 from Controler import MainMenu
-from Modele import DataBasePlayers
+from Modele import DataBasePlayers, DataBaseTournament
 
 
-database = DataBasePlayers()
+databasetournament = DataBaseTournament()
+databaseplayer = DataBasePlayers()
 main = MainMenu()
