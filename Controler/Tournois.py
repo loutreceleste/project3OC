@@ -83,21 +83,20 @@ class TournamentMenu(AllViewMenu):
                 duels = []
                 with open('databasetournament.json', 'r') as json_file:
                     data = json.load(json_file)
-                for i in range(0, len(joueurs) - 1, 2):
-                    new_duel = [joueurs[i - 1][0], joueurs[i][0], 0]
+                for i in range(players_half):
+                    new_duel = [update_players_score[i - 1][0], update_players_score[i][0], 0]
                     duels.append(new_duel)
-                print(duels)
                 for tournament_id, tournament_data in data["_default"].items():
-                    if tournament_data["Nom"] == tournoi:
-                        tournament_data["Liste des tours"][-players_half] = all_matches
-                        tournament_data["Joueurs"] = update_players_score
-                        tournament_data["Liste des tours"] += duels
-                        tournament_data["Numero de tour"] += 1
-                    else:
-                        print("Ce tournois n'existe pas!")
-                    with open('databasetournament.json', 'w') as json_file:
-                        json.dump(data, json_file)
-                    TournamentMenu()
+                    tournament_id = tournament_id[tournament_data]["Nom"]
+                    tournament_data["Liste des tours"][-players_half:] = all_matches
+                    tournament_data["Joueurs"] = update_players_score
+                    tournament_data["Liste des tours"] += duels
+                    tournament_data["Numero de tour"] += 1
+                else:
+                    print("Ce tournois n'existe pas!")
+                with open('databasetournament.json', 'w') as json_file:
+                    json.dump(data, json_file)
+                TournamentMenu()
 
             elif numero_tour is not None and numero_tour == 3:
                 players = dict(joueurs)
