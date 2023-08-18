@@ -56,6 +56,7 @@ class TournamentMenu(AllViewMenu):
                 TournamentMenu()
 
         elif user_choice == "2":
+            print("1 = joueur 1 qui gagne / 2 = joueur 2 qui gagne / 3 = match nul / 0 = match encore a jouer")
             MenuTournament.titre_acual_tournament()
             tournament = Tournament("", "", "", "", "", "", "", "")
             tournament.show_all()
@@ -65,86 +66,86 @@ class TournamentMenu(AllViewMenu):
             MenuTournament.titre_end_round()
             tournoi = MenuPlayer.nom_tournois()
             joueurs = Tournament.get_tournament_players(tournoi)
-            all_matches = Tournament.get_tournament_match(tournoi)
+            last_matches = Tournament.get_last_tournament_match(tournoi)
+            all_matches = Tournament.get_all_tournament_match(tournoi)
             players_half = Tournament.get_tournament_players_half()
             numero_tour = Tournament.get_number_of_round(tournoi)
-            if numero_tour is not None and numero_tour < 3:
-                players = dict(joueurs)
+
+            if numero_tour is not None and numero_tour <= 3:
+                with open('databasetournament.json', 'r') as json_file:
+                    data = json.load(json_file)
                 numero_round = numero_tour
                 print(f"-----RESULTATS ROUND {numero_round}-----")
-                print("1p = match gagné / 0p = match perdu / 0.5p = match nul")
-                for match in all_matches:
+                print("1 = joueur 1 qui gagne / 2 = joueur 2 qui gagne / 3 = match nul / 0 = match encore a jouer")
+
+                for match in last_matches:
                     print(match)
                     resultat = int(input('Resultat: '))
                     match[-1] = resultat
-                sorted_players = dict(sorted(players.items(), reverse=True, key=lambda item: item[1]))
-                update_players_score = list(sorted_players.items())
-                print(update_players_score)
+                    if resultat == 1:
+                        winnner = match[0]
+                        for joueur in joueurs:
+                            if joueur[0] == winnner:
+                                joueur[1] += 1
+                    if resultat == 2:
+                        winnner = match[1]
+                        for joueur in joueurs:
+                            if joueur[0] == winnner:
+                                joueur[1] += 1
+                    if resultat == 3:
+                        winnner1 = match[0]
+                        winnner2 = match[1]
+                        for joueur in joueurs:
+                            if joueur[0] == winnner1:
+                                joueur[1] += 0.5
+                        for joueur in joueurs:
+                            if joueur[0] == winnner2:
+                                joueur[1] += 0.5
+                        print(joueurs)
+                sorted_players = sorted(joueurs, reverse=True, key=lambda item: item[1])
+
                 duels = []
-                with open('databasetournament.json', 'r') as json_file:
-                    data = json.load(json_file)
-                for i in range(players_half):
-                    new_duel = [update_players_score[i - 1][0], update_players_score[i][0], 0]
+                for i in range(0, len(joueurs) - 1, 2):
+                    new_duel = [sorted_players[i - 1][0], sorted_players[i][0], 0]
+                    duel_already_done = any(new_duel == match[:2] or new_duel == match[1::-1] for match in all_matches)
+
+                    while duel_already_done is True:
+                        i += 2
+                        if i >= len(joueurs) - 1:
+                            break
+                        new_duel = [sorted_players[i - 1][0], sorted_players[i][0], 0]
+                        duel_already_done = any(new_duel == match[:2] or new_duel == match[1::-1] for match in all_matches)
                     duels.append(new_duel)
                 for tournament_id, tournament_data in data["_default"].items():
-                    tournament_id = tournament_id[tournament_data]["Nom"]
-                    tournament_data["Liste des tours"][-players_half:] = all_matches
-                    tournament_data["Joueurs"] = update_players_score
-                    tournament_data["Liste des tours"] += duels
-                    tournament_data["Numero de tour"] += 1
-                else:
-                    print("Ce tournois n'existe pas!")
-                with open('databasetournament.json', 'w') as json_file:
-                    json.dump(data, json_file)
-                TournamentMenu()
-
-            elif numero_tour is not None and numero_tour == 3:
-                players = dict(joueurs)
-                print("-----RESULTATS ROUND 3-----")
-                print("1p = match gagné / 0p = match perdu / 0.5p = match nul")
-                for match in all_matches:
-                    print(match)
-                    resultat = int(input('Resultat: '))
-                    match[-1] = resultat
-                sorted_players = dict(sorted(players.items(), reverse=True, key=lambda item: item[1]))
-                update_players_score = list(sorted_players.items())
-                duels = []
-                for i in range(players_half):
-                    new_duel = [update_players_score[i][0], update_players_score[i + players_half][0], 0]
-                with open('databasetournament.json', 'r') as json_file:
-                    data = json.load(json_file)
-                    for tournament_id, tournament_data in data["_default"].items():
-                        if tournament_data["Nom"] == tournoi:
-                            tournament_data["Joueurs"] = update_players_score
-                            tournament_data["Liste des tours"] += duels
-                            tournament_data["Numero de tour"] += 1
-                        else:
-                            print("Ce tournois n'existe pas!")
+                    if tournament_data["Nom"] == tournoi:
+                        tournament_data["Liste des tours"][-players_half:] = last_matches
+                        tournament_data["Joueurs"] = sorted_players
+                        tournament_data["Liste des tours"] += duels
+                        tournament_data["Numero de tour"] += 1
                 with open('databasetournament.json', 'w') as json_file:
                     json.dump(data, json_file)
                 TournamentMenu()
 
             elif numero_tour is not None and numero_tour == 4:
                 players = dict(joueurs)
+                last_matches = Tournament.get_last_tournament_match(tournoi)
                 print("-----RESULTATS ROUND 4-----")
                 print("1p = match gagné / 0p = match perdu / 0.5p = match nul")
-                for player in players:
-                    print(player)
-                    score = MenuTournament.nouveau_score()
-                    players[player] += score
+                for match in last_matches:
+                    print(match)
+                    resultat = int(input('Resultat: '))
+                    match[-1] = resultat
                 sorted_players = dict(sorted(players.items(), key=lambda item: item[1]))
                 update_players_score = list(sorted_players.items())
                 with open('databasetournament.json', 'r') as json_file:
                     data = json.load(json_file)
-                    for tournament_id, tournament_data in data["_default"].items():
-                        if tournament_data["Nom"] == tournoi:
-                            tournament_data["Joueurs"] = update_players_score
-                        else:
-                            print("Ce tournois n'existe pas!")
+                for tournament_id, tournament_data in data["_default"].items():
+                    if tournament_data["Nom"] == tournoi:
+                        tournament_data["Liste des tours"][-players_half:] = last_matches
+                        tournament_data["Joueurs"] = update_players_score
                 with open('databasetournament.json', 'w') as json_file:
                     json.dump(data, json_file)
                 TournamentMenu()
-
             else:
                 print("Ce tournois est deja fini ou n'existe pas")
                 TournamentMenu()

@@ -71,7 +71,7 @@ class Tournament:
             print("ERREUR:")
 
     @staticmethod
-    def get_tournament_match(nom_tournoi):
+    def get_last_tournament_match(nom_tournoi):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -83,7 +83,21 @@ class Tournament:
                         liste_de_tours = tournoi.get("Liste des tours", [])
                         derniers_tours = liste_de_tours[-nombre_de_joueurs:]
                         return derniers_tours
+        except json.JSONDecodeError:
+            print("ERREUR:")
+        except TypeError:
+            print("ERREUR:")
 
+    @staticmethod
+    def get_all_tournament_match(nom_tournoi):
+        try:
+            with open('databasetournament.json') as json_file:
+                data = json.load(json_file)
+                tournois_dict = data.get("_default", {})
+            for tournoi in tournois_dict.values():
+                if tournoi.get("Nom") == nom_tournoi:
+                    liste_de_tours = tournoi.get("Liste des tours", [])
+                    return liste_de_tours
         except json.JSONDecodeError:
             print("ERREUR:")
         except TypeError:
