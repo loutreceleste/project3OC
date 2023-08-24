@@ -1,5 +1,4 @@
 from tinydb import TinyDB
-import json
 
 
 class DataBasePlayers:

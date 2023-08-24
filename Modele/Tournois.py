@@ -1,6 +1,8 @@
 from tinydb import TinyDB
 import json
 
+import View.Tournois
+
 
 class DataBaseTournament:
     def __init__(self):
@@ -20,9 +22,6 @@ class Tournament:
         self.liste_des_tours = liste_des_tours
         self.db = TinyDB('databasetournament.json')
 
-    def add_participant(self, joueur):
-        self.joueurs.append(joueur)
-
     def insert(self):
         self.db.insert(
             {
@@ -37,13 +36,13 @@ class Tournament:
             }
         )
 
-    def show_all(self):
+    def show_all_informations(self):
         all_data = self.db.all()
         for data in all_data:
             print(data)
 
     @staticmethod
-    def get_tournament_players(nom_tournoi):
+    def get_all_tournament_players(nom_tournoi):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -52,12 +51,12 @@ class Tournament:
                     if tournoi.get("Nom") == nom_tournoi:
                         return tournoi.get("Joueurs", [])
         except json.JSONDecodeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
         except TypeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
 
     @staticmethod
-    def get_tournament_players_half():
+    def get_half_tournament_players():
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -66,12 +65,12 @@ class Tournament:
                     nombre_de_joueurs = len(joueurs.get("Joueurs", [])) // 2
                     return int(nombre_de_joueurs)
         except json.JSONDecodeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
         except TypeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
 
     @staticmethod
-    def get_last_tournament_match(nom_tournoi):
+    def get_lasts_tournament_matchs(nom_tournoi):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -84,12 +83,12 @@ class Tournament:
                         derniers_tours = liste_de_tours[-nombre_de_joueurs:]
                         return derniers_tours
         except json.JSONDecodeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
         except TypeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
 
     @staticmethod
-    def get_all_tournament_match(nom_tournoi):
+    def get_all_tournament_matchs(nom_tournoi):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -99,9 +98,9 @@ class Tournament:
                     liste_de_tours = tournoi.get("Liste des tours", [])
                     return liste_de_tours
         except json.JSONDecodeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
         except TypeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
 
     @staticmethod
     def get_number_of_round(nom_tournoi):
@@ -113,5 +112,14 @@ class Tournament:
                     if tournoi.get("Nom") == nom_tournoi:
                         return tournoi.get("Numero de tour")
         except TypeError:
-            print("ERREUR:")
+            View.Tournois.MenuTournament.error()
 
+    @staticmethod
+    def write_in_database_tournament(data):
+        with open('databasetournament.json', 'w') as json_file:
+            json.dump(data, json_file)
+
+    @staticmethod
+    def read_in_database_tournament():
+        with open('databasetournament.json', 'r') as json_file:
+            json.load(json_file)
