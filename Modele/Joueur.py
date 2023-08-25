@@ -8,12 +8,12 @@ class DataBasePlayers:
 
 class Player:
 
-    def __init__(self, nom, prenom, date, ine, score):
+    def __init__(self, nom, prenom, date, ine):
         self.nom = nom
         self.prenom = prenom
         self.date = date
         self.ine = ine
-        self.score = score
+
         self.db = TinyDB('databaseplayers.json')
 
     def insert(self):
@@ -23,11 +23,11 @@ class Player:
                 "Prenom": self.prenom,
                 "Date": self.date,
                 "INE": self.ine,
-                "Score": self.score
             }
         )
 
     def show_all(self):
         all_data = self.db.all()
+        all_data = sorted(all_data, key=lambda k: k['Nom'])
         for data in all_data:
             print(data)

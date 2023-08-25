@@ -1,6 +1,10 @@
+import json
+
+
 class MenuTournament:
 
     def __init__(self, nom, lieu, dates, nombre_tours, numero_tour, remarques):
+        print()
         print("-----INFORMATIONS DU TOURNOIS-----")
         self.nom = nom
         self.lieu = lieu
@@ -11,9 +15,9 @@ class MenuTournament:
 
     @staticmethod
     def tournament_informations():
-        nom = input("Nom du tournois: ")
-        lieu = input("Lieu du tournois: ")
-        dates = input("Dates du tournois: ")
+        nom = input("Nom du tournoi: ")
+        lieu = input("Lieu du tournoi: ")
+        dates = input("Dates du tournoi: ")
         nombre_tours = 4
         numero_tour = 1
         remarques = input("Remarques du directeur: ")
@@ -27,14 +31,32 @@ class MenuTournament:
 
     @staticmethod
     def titre_new_tournament():
-        print("-----NOUVEAU TOURNOIS-----")
+        print()
+        print("-----CREER UN NOUVEAU TOURNOI-----")
 
     @staticmethod
-    def titre_acual_tournament():
+    def titre_tournaments():
+        print()
         print("-----LES TOURNOIS EN COURS-----")
 
     @staticmethod
+    def titre_duel_tournament(nom_tournois):
+        print()
+        print(f"-----TOURS ET MATCHS DU TOURNOIS {nom_tournois.upper()}-----")
+
+    @staticmethod
+    def titre_players_tournament(nom_tournois):
+        print()
+        print(f"-----JOUEURS DU TOURNOIS {nom_tournois.upper()}-----")
+
+    @staticmethod
+    def titre_info_tournament(nom_tournois):
+        print()
+        print(f"-----TOUTES LES INFOS DU TOURNOIS {nom_tournois.upper()}-----")
+
+    @staticmethod
     def titre_end_round():
+        print()
         print("-----FINIR ET RESEIGNER UN ROUND-----")
 
     @staticmethod
@@ -46,8 +68,12 @@ class MenuTournament:
         print("Ce nom de tournois existe deja!")
 
     @staticmethod
-    def error_scoring():
+    def error_scoring_1_3():
         print("Veuillez saisir un chiffre entre 1 et 3.")
+
+    @staticmethod
+    def error_scoring_1_4():
+        print("Veuillez saisir un chiffre entre 1 et 4.")
 
     @staticmethod
     def input_result_duels():
@@ -55,21 +81,13 @@ class MenuTournament:
         return result
 
     @staticmethod
-    def end_round_date(numero_round):
-        end_date = input(f"Date et heure de fin du Round {numero_round}: ")
-        return end_date
-
-    @staticmethod
-    def start_round_date(numero_round):
-        start_date = input(f"Date et heure de debut du Round {numero_round + 1}: ")
-        return start_date
-
-    @staticmethod
     def title_round_result(numero_round):
+        print()
         print(f"-----RESULTATS ROUND {numero_round}-----")
 
     @staticmethod
     def title_round_4():
+        print()
         print("-----RESULTATS ROUND 4-----")
 
     @staticmethod
@@ -93,3 +111,73 @@ class MenuTournament:
     @staticmethod
     def tournament_does_not_exist():
         print("Ce tournois n'existe pas!")
+
+    @staticmethod
+    def no_tournament():
+        print("Aucun tournois a afficher!")
+
+    @staticmethod
+    def get_all_sorted_tournament_players(nom_tournoi):
+        try:
+            with open('databasetournament.json') as json_file:
+                data = json.load(json_file)
+                tournois_dict = data.get("_default", {})
+                for tournoi in tournois_dict.values():
+                    if tournoi.get("Nom") == nom_tournoi:
+                        players_and_score = tournoi.get("Joueurs", [])
+                        players = [item[0] for item in players_and_score]
+                        players.sort()
+                        print(players)
+                        break
+                else:
+                    MenuTournament.tournament_does_not_exist()
+        except json.JSONDecodeError:
+            MenuTournament.error()
+        except TypeError:
+            MenuTournament.error()
+
+    @staticmethod
+    def show_informations_tournament(nom_tournoi):
+        try:
+            with open('databasetournament.json') as json_file:
+                data = json.load(json_file)
+                tournois_dict = data.get("_default", {})
+                for tournoi in tournois_dict.values():
+                    if tournoi.get("Nom") == nom_tournoi:
+                        print(tournoi)
+                        break
+                else:
+                    MenuTournament.tournament_does_not_exist()
+        except json.JSONDecodeError:
+            MenuTournament.error()
+        except TypeError:
+            MenuTournament.error()
+
+    @staticmethod
+    def show_all_informations():
+        with open('databasetournament.json', 'r') as json_file:
+            data = json.load(json_file)
+            for tournament_id, tournament_data in data["_default"].items():
+                print("Nom:", tournament_data["Nom"], "/",
+                      "Lieu:", tournament_data["Lieu"], "/",
+                      "Dates:", tournament_data["Dates"], "/",
+                      "Nombre de tours:", tournament_data["Nombre de tours"], "/",
+                      "Numero de tour:", tournament_data["Numero de tour"])
+
+    @staticmethod
+    def show_duel_informations(nom_tournoi):
+        try:
+            with open('databasetournament.json') as json_file:
+                data = json.load(json_file)
+                tournois_dict = data.get("_default", {})
+                for tournoi in tournois_dict.values():
+                    if tournoi.get("Nom") == nom_tournoi:
+                        duels = list(tournoi.items())
+                        print(duels[0], duels[-1])
+                        break
+                else:
+                    MenuTournament.tournament_does_not_exist()
+        except json.JSONDecodeError:
+            MenuTournament.error()
+        except TypeError:
+            MenuTournament.error()

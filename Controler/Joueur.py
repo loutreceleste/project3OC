@@ -22,7 +22,7 @@ class PlayerMenu(AllViewMenu):
 
         elif user_choice == "2":
             MenuPlayer.title_show_data()
-            player = Player("", "", "", "", "")
+            player = Player("", "", "", "")
             player.show_all()
             PlayerMenu()
 

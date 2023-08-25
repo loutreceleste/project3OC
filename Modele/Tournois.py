@@ -1,6 +1,6 @@
 from tinydb import TinyDB
 import json
-
+from datetime import datetime
 import View.Tournois
 
 
@@ -10,7 +10,6 @@ class DataBaseTournament:
 
 
 class Tournament:
-
     def __init__(self, nom, lieu, dates, nombre_tours, numero_tour, remarques, joueurs, liste_des_tours):
         self.nom = nom
         self.lieu = lieu
@@ -35,11 +34,6 @@ class Tournament:
                 "Liste des tours": self.liste_des_tours
             }
         )
-
-    def show_all_informations(self):
-        all_data = self.db.all()
-        for data in all_data:
-            print(data)
 
     @staticmethod
     def get_all_tournament_players(nom_tournoi):
@@ -122,4 +116,11 @@ class Tournament:
     @staticmethod
     def read_in_database_tournament():
         with open('databasetournament.json', 'r') as json_file:
-            json.load(json_file)
+            data = json.load(json_file)
+            return data
+
+    @staticmethod
+    def date_time_now():
+        now = datetime.now()
+        date = now.strftime("%d/%m/%Y %H:%M:%S")
+        return date
