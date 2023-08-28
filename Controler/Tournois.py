@@ -31,7 +31,7 @@ class TournamentMenu(AllViewMenu):
                     for i in range(nombre_de_participants):
                         joueur = MenuTournament.participants_tournois()
                         joueurs.append(joueur)
-                    duels = [f"--ROUND 1--, Debut du Round 1 le: {date_instant}"]
+                    duels = [f"--ROUND 1--, Début du Round 1 le: {date_instant}"]
                     shuffle(joueurs)
                     for i in range(0, len(joueurs) - 1, 2):
                         duel = [joueurs[i - 1][0], joueurs[i][0], 0]
@@ -49,7 +49,7 @@ class TournamentMenu(AllViewMenu):
                 for i in range(nombre_de_participants):
                     joueur = MenuTournament.participants_tournois()
                     joueurs.append(joueur)
-                duels = [f"--ROUND 1--, Debut du Round 1 le: {date_instant}"]
+                duels = [f"--ROUND 1--, Début du Round 1 le: {date_instant}"]
                 shuffle(joueurs)
                 for i in range(0, len(joueurs) - 1, 2):
                     duel = [joueurs[i - 1][0], joueurs[i][0], 0]
@@ -95,146 +95,151 @@ class TournamentMenu(AllViewMenu):
                 TournamentMenu()
 
         elif user_choice == "3":
-            MenuTournament.titre_end_round()
-            tournoi = MenuPlayer.nom_tournois()
-            joueurs = Tournament.get_all_tournament_players(tournoi)
-            last_matches = Tournament.get_lasts_tournament_matchs(tournoi)
-            all_matches = Tournament.get_all_tournament_matchs(tournoi)
-            players_half = Tournament.get_half_tournament_players()
-            numero_tour = Tournament.get_number_of_round(tournoi)
-
-            if numero_tour is not None and 1 <= numero_tour <= 3:
-                data = Modele.Tournois.Tournament.read_in_database_tournament()
-                numero_round = numero_tour
-                View.Tournois.MenuTournament.title_round_result(numero_round)
-                View.Tournois.MenuTournament.point_explanation()
-                date_instant = Modele.Tournois.Tournament.date_time_now()
-
-                for match in last_matches:
-                    print(match)
-                    while True:
-                        resultat = View.Tournois.MenuTournament.input_result_duels()
-                        try:
-                            num = int(resultat)
-                            if 1 <= num <= 3:
-                                break
-                            else:
-                                View.Tournois.MenuTournament.error_scoring_1_3()
-                        except ValueError:
-                            View.Tournois.MenuTournament.error_scoring_1_3()
-                    match[-1] = num
-                    if num == 1:
-                        winnner = match[0]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner:
-                                joueur[1] += 1
-                    if num == 2:
-                        winnner = match[1]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner:
-                                joueur[1] += 1
-                    if num == 3:
-                        winnner1 = match[0]
-                        winnner2 = match[1]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner1:
-                                joueur[1] += 0.5
-                        for joueur in joueurs:
-                            if joueur[0] == winnner2:
-                                joueur[1] += 0.5
-
-                sorted_players = sorted(joueurs, reverse=True, key=lambda item: item[1])
-                duels = [f"Fin du Round {numero_round} le: {date_instant}, --ROUND {numero_round + 1}--, "
-                         f"Debut du Round {numero_round + 1} le: {date_instant}"]
-
-                i = 0
-                while i < len(joueurs) - 1:
-                    unique_duel_found = False
-
-                    for j in range(i + 1, len(joueurs)):
-                        new_duel = [joueurs[i][0], joueurs[j][0], 0]
-                        duel_already_done = any(
-                            (new_duel[:2] == match[:2] or new_duel[:2] == match[1::-1]) for match in all_matches)
-
-                        if not duel_already_done:
-                            duels.append(new_duel)
-                            joueurs.pop(j)
-                            joueurs.pop(i)
-                            unique_duel_found = True
-                            break
-
-                    if not unique_duel_found:
-                        forced_duel = [joueurs[i][0], joueurs[i + 1][0], 0]
-                        duels.append(forced_duel)
-                        joueurs.pop(i + 1)
-                        joueurs.pop(i)
-
-                for tournament_id, tournament_data in data["_default"].items():
-                    if tournament_data["Nom"] == tournoi:
-                        tournament_data["Liste des tours"][-players_half:] = last_matches
-                        tournament_data["Joueurs"] = sorted_players
-                        tournament_data["Liste des tours"] += duels
-                        tournament_data["Numero de tour"] += 1
-                Modele.Tournois.Tournament.write_in_database_tournament(data)
-                TournamentMenu()
-
-            elif numero_tour is not None and numero_tour == 4:
-                last_matches = Tournament.get_lasts_tournament_matchs(tournoi)
+            try:
+                MenuTournament.titre_end_round()
+                tournoi = MenuPlayer.nom_tournois()
                 joueurs = Tournament.get_all_tournament_players(tournoi)
-                View.Tournois.MenuTournament.title_round_4()
-                View.Tournois.MenuTournament.point_explanation()
-                date_instant = Modele.Tournois.Tournament.date_time_now()
+                last_matches = Tournament.get_lasts_tournament_matchs(tournoi)
+                all_matches = Tournament.get_all_tournament_matchs(tournoi)
+                players_half = Tournament.get_half_tournament_players()
+                numero_tour = Tournament.get_number_of_round(tournoi)
 
-                for match in last_matches:
-                    print(match)
-                    while True:
-                        resultat = View.Tournois.MenuTournament.input_result_duels()
-                        try:
-                            num = int(resultat)
-                            if 1 <= num <= 3:
-                                break
-                            else:
+                if numero_tour is not None and 1 <= numero_tour <= 3:
+                    data = Modele.Tournois.Tournament.read_in_database_tournament()
+                    numero_round = numero_tour
+                    View.Tournois.MenuTournament.title_round_result(numero_round)
+                    View.Tournois.MenuTournament.point_explanation()
+                    date_instant = Modele.Tournois.Tournament.date_time_now()
+
+                    for match in last_matches:
+                        print(match)
+                        while True:
+                            resultat = View.Tournois.MenuTournament.input_result_duels()
+                            try:
+                                num = int(resultat)
+                                if 1 <= num <= 3:
+                                    break
+                                else:
+                                    View.Tournois.MenuTournament.error_scoring_1_3()
+                            except ValueError:
                                 View.Tournois.MenuTournament.error_scoring_1_3()
-                        except ValueError:
-                            View.Tournois.MenuTournament.error_scoring_1_3()
-                    match[-1] = num
-                    if num == 1:
-                        winnner = match[0]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner:
-                                joueur[1] += 1
-                    if num == 2:
-                        winnner = match[1]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner:
-                                joueur[1] += 1
-                    if num == 3:
-                        winnner1 = match[0]
-                        winnner2 = match[1]
-                        for joueur in joueurs:
-                            if joueur[0] == winnner1:
-                                joueur[1] += 0.5
-                        for joueur in joueurs:
-                            if joueur[0] == winnner2:
-                                joueur[1] += 0.5
+                        match[-1] = num
+                        if num == 1:
+                            winnner = match[0]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner:
+                                    joueur[1] += 1
+                        if num == 2:
+                            winnner = match[1]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner:
+                                    joueur[1] += 1
+                        if num == 3:
+                            winnner1 = match[0]
+                            winnner2 = match[1]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner1:
+                                    joueur[1] += 0.5
+                            for joueur in joueurs:
+                                if joueur[0] == winnner2:
+                                    joueur[1] += 0.5
 
-                sorted_players = sorted(joueurs, reverse=True, key=lambda item: item[1])
-                data = Modele.Tournois.Tournament.read_in_database_tournament()
-                for tournament_id, tournament_data in data["_default"].items():
-                    if tournament_data["Nom"] == tournoi:
-                        tournament_data["Liste des tours"][-players_half:] = [f"{last_matches}, "
-                                                                              f"Fin du Round 4 le: {date_instant}"]
-                        tournament_data["Joueurs"] = sorted_players
-                        tournament_data["Numero de tour"] = 0
-                Modele.Tournois.Tournament.write_in_database_tournament(data)
-                TournamentMenu()
+                    sorted_players = sorted(joueurs, reverse=True, key=lambda item: item[1])
+                    duels = [f"Fin du Round {numero_round} le: {date_instant}, --ROUND {numero_round + 1}--, "
+                             f"Début du Round {numero_round + 1} le: {date_instant}"]
 
-            elif numero_tour == 0:
-                View.Tournois.MenuTournament.tournament_finish()
-                TournamentMenu()
+                    i = 0
+                    while i < len(joueurs) - 1:
+                        unique_duel_found = False
 
-            else:
-                View.Tournois.MenuTournament.tournament_does_not_exist()
+                        for j in range(i + 1, len(joueurs)):
+                            new_duel = [joueurs[i][0], joueurs[j][0], 0]
+                            duel_already_done = any(
+                                (new_duel[:2] == match[:2] or new_duel[:2] == match[1::-1]) for match in all_matches)
+
+                            if not duel_already_done:
+                                duels.append(new_duel)
+                                joueurs.pop(j)
+                                joueurs.pop(i)
+                                unique_duel_found = True
+                                break
+
+                        if not unique_duel_found:
+                            forced_duel = [joueurs[i][0], joueurs[i + 1][0], 0]
+                            duels.append(forced_duel)
+                            joueurs.pop(i + 1)
+                            joueurs.pop(i)
+
+                    for tournament_id, tournament_data in data["_default"].items():
+                        if tournament_data["Nom"] == tournoi:
+                            tournament_data["Liste des tours"][-players_half:] = last_matches
+                            tournament_data["Joueurs"] = sorted_players
+                            tournament_data["Liste des tours"] += duels
+                            tournament_data["Numéro de tour"] += 1
+                    Modele.Tournois.Tournament.write_in_database_tournament(data)
+                    TournamentMenu()
+
+                elif numero_tour is not None and numero_tour == 4:
+                    last_matches = Tournament.get_lasts_tournament_matchs(tournoi)
+                    joueurs = Tournament.get_all_tournament_players(tournoi)
+                    View.Tournois.MenuTournament.title_round_4()
+                    View.Tournois.MenuTournament.point_explanation()
+                    date_instant = Modele.Tournois.Tournament.date_time_now()
+
+                    for match in last_matches:
+                        print(match)
+                        while True:
+                            resultat = View.Tournois.MenuTournament.input_result_duels()
+                            try:
+                                num = int(resultat)
+                                if 1 <= num <= 3:
+                                    break
+                                else:
+                                    View.Tournois.MenuTournament.error_scoring_1_3()
+                            except ValueError:
+                                View.Tournois.MenuTournament.error_scoring_1_3()
+                        match[-1] = num
+                        if num == 1:
+                            winnner = match[0]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner:
+                                    joueur[1] += 1
+                        if num == 2:
+                            winnner = match[1]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner:
+                                    joueur[1] += 1
+                        if num == 3:
+                            winnner1 = match[0]
+                            winnner2 = match[1]
+                            for joueur in joueurs:
+                                if joueur[0] == winnner1:
+                                    joueur[1] += 0.5
+                            for joueur in joueurs:
+                                if joueur[0] == winnner2:
+                                    joueur[1] += 0.5
+
+                    sorted_players = sorted(joueurs, reverse=True, key=lambda item: item[1])
+                    data = Modele.Tournois.Tournament.read_in_database_tournament()
+                    for tournament_id, tournament_data in data["_default"].items():
+                        if tournament_data["Nom"] == tournoi:
+                            tournament_data["Liste des tours"][-players_half:] = [f"{last_matches}, "
+                                                                                  f"Fin du Round 4 le: {date_instant}"]
+                            tournament_data["Joueurs"] = sorted_players
+                            tournament_data["Numéro de tour"] = 0
+                    Modele.Tournois.Tournament.write_in_database_tournament(data)
+                    TournamentMenu()
+
+                elif numero_tour == 0:
+                    View.Tournois.MenuTournament.tournament_finish()
+                    TournamentMenu()
+
+                else:
+                    View.Tournois.MenuTournament.tournament_does_not_exist()
+                    TournamentMenu()
+
+            except json.JSONDecodeError:
+                View.Tournois.MenuTournament.no_tournament()
                 TournamentMenu()
 
         elif user_choice == "4":

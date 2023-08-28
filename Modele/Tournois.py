@@ -28,7 +28,7 @@ class Tournament:
                 "Lieu": self.lieu,
                 "Dates": self.dates,
                 "Nombre de tours": self.nombre_tours,
-                "Numero de tour": self.numero_tours,
+                "Numéro de tour": self.numero_tours,
                 "Remarques": self.remarques,
                 "Joueurs": self.joueurs,
                 "Liste des tours": self.liste_des_tours
@@ -44,8 +44,6 @@ class Tournament:
                 for tournoi in tournois_dict.values():
                     if tournoi.get("Nom") == nom_tournoi:
                         return tournoi.get("Joueurs", [])
-        except json.JSONDecodeError:
-            View.Tournois.MenuTournament.error()
         except TypeError:
             View.Tournois.MenuTournament.error()
 
@@ -58,8 +56,6 @@ class Tournament:
                 for joueurs in tournois_dict.values():
                     nombre_de_joueurs = len(joueurs.get("Joueurs", [])) // 2
                     return int(nombre_de_joueurs)
-        except json.JSONDecodeError:
-            View.Tournois.MenuTournament.error()
         except TypeError:
             View.Tournois.MenuTournament.error()
 
@@ -76,8 +72,6 @@ class Tournament:
                         liste_de_tours = tournoi.get("Liste des tours", [])
                         derniers_tours = liste_de_tours[-nombre_de_joueurs:]
                         return derniers_tours
-        except json.JSONDecodeError:
-            View.Tournois.MenuTournament.error()
         except TypeError:
             View.Tournois.MenuTournament.error()
 
@@ -91,8 +85,6 @@ class Tournament:
                 if tournoi.get("Nom") == nom_tournoi:
                     liste_de_tours = tournoi.get("Liste des tours", [])
                     return liste_de_tours
-        except json.JSONDecodeError:
-            View.Tournois.MenuTournament.error()
         except TypeError:
             View.Tournois.MenuTournament.error()
 
@@ -104,7 +96,7 @@ class Tournament:
                 tournois_dict = data.get("_default", {})
                 for tournoi in tournois_dict.values():
                     if tournoi.get("Nom") == nom_tournoi:
-                        return tournoi.get("Numero de tour")
+                        return tournoi.get("Numéro de tour")
         except TypeError:
             View.Tournois.MenuTournament.error()
 

@@ -11,7 +11,7 @@ class MenuPlayer:
     @staticmethod
     def player_informations():
         nom = input("Votre nom: ")
-        prenom = input("Votre prenom: ")
+        prenom = input("Votre prénom: ")
         date = input("Votre date de naissance: ")
         ine = input("Votre INE: ")
         return nom, prenom, date, ine
@@ -20,7 +20,7 @@ class MenuPlayer:
     def nombre_de_joueurs():
         while True:
             try:
-                nombre_de_joueurs = int(input("Nombre de participants au tournois: "))
+                nombre_de_joueurs = int(input("Nombre de participants au tournoi: "))
                 return nombre_de_joueurs
             except ValueError:
                 print("Veuillez saisir un chiffre!")
