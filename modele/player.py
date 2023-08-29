@@ -27,6 +27,7 @@ class Player:
             }
         )
 
+    # Get and sort all players in the database.
     def show_all(self):
         all_data = self.db.all()
         all_data = sorted(all_data, key=lambda k: k['Nom'])

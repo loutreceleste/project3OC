@@ -108,6 +108,7 @@ class MenuTournament:
             except ValueError:
                 print("Veuillez saisir un chiffre!")
 
+    # Geting and printing a sorted list by alphabetical order of all players of a unique tournament.
     @staticmethod
     def get_all_sorted_tournament_players(tournament_name):
         try:
@@ -118,7 +119,8 @@ class MenuTournament:
                     if tournamant.get("Nom") == tournament_name:
                         players_and_score = tournamant.get("Joueurs", [])
                         players = [item[0] for item in players_and_score]
-                        print(players.sort())
+                        players_sorted = sorted(players, key=str.lower)
+                        print(players_sorted)
                         break
                 else:
                     MenuTournament.tournament_does_not_exist()
@@ -127,8 +129,9 @@ class MenuTournament:
         except TypeError:
             MenuTournament.error()
 
+    # Geting and returning all information of a unique tournament.
     @staticmethod
-    def show_informations_tournament(tournament_name):
+    def show_all_informations_tournament(tournament_name):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
@@ -144,8 +147,9 @@ class MenuTournament:
         except TypeError:
             MenuTournament.error()
 
+    # Geting and printing some basics information of all tournament.
     @staticmethod
-    def show_all_informations():
+    def show_basic_informations_tournament():
         with open('databasetournament.json', 'r') as json_file:
             data = json.load(json_file)
             for tournament_id, tournament_data in data["_default"].items():
@@ -155,6 +159,7 @@ class MenuTournament:
                       "Nombre de tours:", tournament_data["Nombre de tours"], "/",
                       "Numéro de tour:", tournament_data["Numéro de tour"])
 
+    # Geting and printing the duels information of a unique tournament.
     @staticmethod
     def show_duel_informations(tournament_name):
         try:
@@ -164,6 +169,7 @@ class MenuTournament:
                 for tournament in tournament_dict.values():
                     if tournament.get("Nom") == tournament_name:
                         duels = list(tournament.items())
+                        # Geting the Name and the Duels of all the information.
                         print(duels[0], duels[-1])
                         break
                 else:

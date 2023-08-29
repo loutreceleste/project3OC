@@ -16,6 +16,7 @@ class TournamentMenu(AllViewMenu):
 
     def choice_tournament_menu(self, user_choice):
 
+        # First part used to initiate tournament ant create duels randomly.
         if user_choice == "1":
             MenuTournament.title_new_tournament()
             date_instant = modele.tournament.Tournament.date_time_now()
@@ -27,10 +28,12 @@ class TournamentMenu(AllViewMenu):
                 if name_tournament_data not in name_tournament_json:
                     number_of_participants = MenuTournament.number_of_players()
                     players = []
+                    # Part of creating players for tounament.
                     for i in range(number_of_participants):
-                        players = MenuTournament.tournament_participants()
-                        players.append(players)
+                        player = MenuTournament.tournament_participants()
+                        players.append(player)
                     duels = [f"--ROUND 1--, Début du Round 1 le: {date_instant}"]
+                    # Part of creating randoms duels.
                     shuffle(players)
                     for i in range(0, len(players) - 1, 2):
                         duel = [players[i - 1][0], players[i][0], 0]
@@ -45,10 +48,12 @@ class TournamentMenu(AllViewMenu):
                 date_instant = modele.tournament.Tournament.date_time_now()
                 number_of_participants = MenuTournament.number_of_players()
                 players = []
+                # Part of creating players for tounament.
                 for i in range(number_of_participants):
-                    players = MenuTournament.tournament_participants()
-                    players.append(players)
+                    player = MenuTournament.tournament_participants()
+                    players.append(player)
                 duels = [f"--ROUND 1--, Début du Round 1 le: {date_instant}"]
+                # Part of creating randoms duels.
                 shuffle(players)
                 for i in range(0, len(players) - 1, 2):
                     duel = [players[i - 1][0], players[i][0], 0]
@@ -57,25 +62,30 @@ class TournamentMenu(AllViewMenu):
                 tournament.insert()
                 TournamentMenu()
 
+        # Part used to see all information needed.
         elif user_choice == "2":
             try:
+                # Geting and printing basic information of a unique tournament.
                 MenuTournament.title_tournaments()
-                view.tournament.MenuTournament.show_all_informations()
+                view.tournament.MenuTournament.show_basic_informations_tournament()
                 view.principal.AllViewMenu.in_tournament_menu()
                 user_choice = AllViewMenu.choise()
 
+                # Geting and printing all information of a unique tournament.
                 if user_choice == "1":
                     tournament_name = MenuTournament.tournament_name()
                     view.tournament.MenuTournament.title_tournament_infos(tournament_name)
-                    view.tournament.MenuTournament.show_informations_tournament(tournament_name)
+                    view.tournament.MenuTournament.show_all_informations_tournament(tournament_name)
                     TournamentMenu()
 
+                # Geting and printing sorted players of a unique tournament.
                 elif user_choice == "2":
                     tournament_name = MenuTournament.tournament_name()
                     view.tournament.MenuTournament.title_players_tournament(tournament_name)
                     view.tournament.MenuTournament.get_all_sorted_tournament_players(tournament_name)
                     TournamentMenu()
 
+                # Geting and printing sorted players of a unique tournament.
                 elif user_choice == "3":
                     tournament_name = MenuTournament.tournament_name()
                     view.tournament.MenuTournament.title_duel_tournament(tournament_name)
@@ -93,6 +103,7 @@ class TournamentMenu(AllViewMenu):
                 view.tournament.MenuTournament.no_tournament()
                 TournamentMenu()
 
+        # Part used to inform of duels results.
         elif user_choice == "3":
             try:
                 MenuTournament.title_end_round()
@@ -110,6 +121,7 @@ class TournamentMenu(AllViewMenu):
                     view.tournament.MenuTournament.point_explanation()
                     date_instant = modele.tournament.Tournament.date_time_now()
 
+                    # Part to inform duels.
                     for match in last_matches:
                         print(match)
                         while True:
@@ -125,44 +137,52 @@ class TournamentMenu(AllViewMenu):
                         match[-1] = num
                         if num == 1:
                             winnner = match[0]
-                            for players in players:
-                                if players[0] == winnner:
-                                    players[1] += 1
+                            for player in players:
+                                if player[0] == winnner:
+                                    player[1] += 1
                         if num == 2:
                             winnner = match[1]
-                            for players in players:
-                                if players[0] == winnner:
-                                    players[1] += 1
+                            for player in players:
+                                if player[0] == winnner:
+                                    player[1] += 1
                         if num == 3:
                             winnner1 = match[0]
                             winnner2 = match[1]
-                            for players in players:
-                                if players[0] == winnner1:
-                                    players[1] += 0.5
-                            for players in players:
-                                if players[0] == winnner2:
-                                    players[1] += 0.5
+                            for player in players:
+                                if player[0] == winnner1:
+                                    player[1] += 0.5
+                            for player in players:
+                                if player[0] == winnner2:
+                                    player[1] += 0.5
 
+                    # Sorting the players according to their points.
                     sorted_players = sorted(players, reverse=True, key=lambda item: item[1])
                     duels = [f"Fin du Round {round_number} le: {date_instant}, --ROUND {round_number + 1}--, "
                              f"Début du Round {round_number + 1} le: {date_instant}"]
 
+                    # Part of creating new duels which have not yet been played.
                     i = 0
                     while i < len(players) - 1:
+                        # We notice that we don't have found a unique duel already.
                         unique_duel_found = False
 
                         for j in range(i + 1, len(players)):
+                            # Create a random duel for start.
                             new_duel = [players[i][0], players[j][0], 0]
+                            # Will ask the database if the duel is already done or not.
                             duel_already_done = any(
                                 (new_duel[:2] == match[:2] or new_duel[:2] == match[1::-1]) for match in all_matches)
 
+                            # If duel not already done it will remouve the players and append the new duel in the list.
                             if not duel_already_done:
                                 duels.append(new_duel)
                                 players.pop(j)
                                 players.pop(i)
+                                # Change unique_duel_found in True to stop the precesus and switch to next duel.
                                 unique_duel_found = True
                                 break
 
+                        # If no unique duel found it will force to make a duel no matter if it already donne or not.
                         if not unique_duel_found:
                             forced_duel = [players[i][0], players[i + 1][0], 0]
                             duels.append(forced_duel)
@@ -178,6 +198,7 @@ class TournamentMenu(AllViewMenu):
                     modele.tournament.Tournament.write_in_database_tournament(data)
                     TournamentMenu()
 
+                # At this lap number we ask not to generate others duels as we are at the end of the tournament.
                 elif lap_number is not None and lap_number == 4:
                     last_matches = Tournament.get_lasts_tournament_matchs(tournament_name)
                     players = Tournament.get_all_tournament_players(tournament_name)
@@ -185,6 +206,7 @@ class TournamentMenu(AllViewMenu):
                     view.tournament.MenuTournament.point_explanation()
                     date_instant = modele.tournament.Tournament.date_time_now()
 
+                    # Part to inform duels.
                     for match in last_matches:
                         print(match)
                         while True:
@@ -218,6 +240,7 @@ class TournamentMenu(AllViewMenu):
                                 if players[0] == winnner2:
                                     players[1] += 0.5
 
+                    # Sorting the players according to their points.
                     sorted_players = sorted(players, reverse=True, key=lambda item: item[1])
                     data = modele.tournament.Tournament.read_in_database_tournament()
                     for tournament_id, tournament_data in data["_default"].items():
@@ -229,6 +252,7 @@ class TournamentMenu(AllViewMenu):
                     modele.tournament.Tournament.write_in_database_tournament(data)
                     TournamentMenu()
 
+                # At this lap number we affirm that the tournament is finish.
                 elif lap_number == 0:
                     view.tournament.MenuTournament.tournament_finish()
                     TournamentMenu()

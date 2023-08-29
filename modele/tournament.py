@@ -35,6 +35,7 @@ class Tournament:
             }
         )
 
+    # Geting a list of all players to use them to genrerate new duels.
     @staticmethod
     def get_all_tournament_players(tournament_name):
         try:
@@ -47,6 +48,7 @@ class Tournament:
         except TypeError:
             view.tournament.MenuTournament.error()
 
+    # Geting the half of tounament players to identifi how many match there is in a round.
     @staticmethod
     def get_half_tournament_players():
         try:
@@ -58,6 +60,7 @@ class Tournament:
         except TypeError:
             view.tournament.MenuTournament.error()
 
+    # Geting the last matchs of a unique tournament, to inform only them and not the whole tournament.
     @staticmethod
     def get_lasts_tournament_matchs(tournament_name):
         try:
@@ -73,6 +76,7 @@ class Tournament:
         except TypeError:
             view.tournament.MenuTournament.error()
 
+    # Used to compare the new duel whith all the duels been already played.
     @staticmethod
     def get_all_tournament_matchs(tournament_name):
         try:
@@ -85,6 +89,7 @@ class Tournament:
         except TypeError:
             view.tournament.MenuTournament.error()
 
+    # Used to know at what stage we are in the tournament.
     @staticmethod
     def get_number_of_round(tournament_name):
         try:
