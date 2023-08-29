@@ -1,5 +1,6 @@
 import json
 
+
 class MenuTournament:
 
     def __init__(self, nom, lieu, dates, nombre_tours, numero_tour, remarques):

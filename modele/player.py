@@ -1,9 +1,11 @@
 from tinydb import TinyDB
 import view.player
 
+
 class DataBasePlayers:
     def __init__(self):
         self.db = TinyDB('databasetournament.json')
+
 
 class Player:
 
