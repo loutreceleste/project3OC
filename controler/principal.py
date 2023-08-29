@@ -1,4 +1,4 @@
-from View.Principal import AllViewMenu
+from view.principal import AllViewMenu
 
 
 class MainMenu(AllViewMenu):
@@ -9,8 +9,8 @@ class MainMenu(AllViewMenu):
 
     def choice_main_menu(self, user_choice):
 
-        from Controler.Joueur import PlayerMenu
-        from Controler.Tournois import TournamentMenu
+        from controler.player import PlayerMenu
+        from controler.tournament import TournamentMenu
 
         if user_choice == "1":
             PlayerMenu()
@@ -22,5 +22,5 @@ class MainMenu(AllViewMenu):
             exit()
 
         else:
-            AllViewMenu.erreur_de_saisie()
+            AllViewMenu.input_error()
             self.__init__()

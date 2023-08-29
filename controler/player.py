@@ -1,6 +1,6 @@
-from View.Principal import AllViewMenu
-from View.Joueur import MenuPlayer
-from Modele.Joueur import Player
+from view.principal import AllViewMenu
+from view.player import MenuPlayer
+from modele.player import Player
 
 
 class PlayerMenu(AllViewMenu):
@@ -11,17 +11,16 @@ class PlayerMenu(AllViewMenu):
 
     def choice_player_menu(self, user_choice):
 
-        from Controler.Principal import MainMenu
+        from controler.principal import MainMenu
 
         if user_choice == "1":
             MenuPlayer.title_new_player()
-            infos_joueur = MenuPlayer.player_informations()
-            player = Player(*infos_joueur)
+            player = Player(*MenuPlayer.player_informations())
             player.insert()
             PlayerMenu()
 
         elif user_choice == "2":
-            MenuPlayer.title_show_data()
+            MenuPlayer.title_show_data_player()
             player = Player("", "", "", "")
             player.show_all()
             PlayerMenu()
@@ -30,5 +29,5 @@ class PlayerMenu(AllViewMenu):
             MainMenu()
 
         else:
-            AllViewMenu.erreur_de_saisie()
+            AllViewMenu.input_error()
             self.__init__()

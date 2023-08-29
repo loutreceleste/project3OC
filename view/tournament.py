@@ -1,11 +1,9 @@
 import json
 
-
 class MenuTournament:
 
     def __init__(self, nom, lieu, dates, nombre_tours, numero_tour, remarques):
-        print()
-        print("-----INFORMATIONS DU TOURNOI-----")
+        print("\n-----INFORMATIONS DU TOURNOI-----")
         self.nom = nom
         self.lieu = lieu
         self.dates = dates
@@ -24,40 +22,38 @@ class MenuTournament:
         return nom, lieu, dates, nombre_tours, numero_tour, remarques
 
     @staticmethod
-    def participants_tournois():
+    def tournament_participants():
         numero_ine = input("Numéro INE du joueur: ")
         score = 0
         return numero_ine, score
 
     @staticmethod
-    def titre_new_tournament():
-        print()
-        print("-----CRÉER UN NOUVEAU TOURNOI-----")
+    def tournament_name():
+        return input("Entrez le nom du tournoi: ")
 
     @staticmethod
-    def titre_tournaments():
-        print()
-        print("-----LES TOURNOIS EN COURS-----")
+    def title_new_tournament():
+        print("\n-----CRÉER UN NOUVEAU TOURNOI-----")
 
     @staticmethod
-    def titre_duel_tournament(nom_tournois):
-        print()
-        print(f"-----TOURS ET MATCHS DU TOURNOI {nom_tournois.upper()}-----")
+    def title_tournaments():
+        print("\n-----LES TOURNOIS EN COURS-----")
 
     @staticmethod
-    def titre_players_tournament(nom_tournois):
-        print()
-        print(f"-----JOUEURS DU TOURNOI {nom_tournois.upper()}-----")
+    def title_duel_tournament(nom_tournois):
+        print(f"\n-----TOURS ET MATCHS DU TOURNOI {nom_tournois.upper()}-----")
 
     @staticmethod
-    def titre_info_tournament(nom_tournois):
-        print()
-        print(f"-----TOUTES LES INFOS DU TOURNOI {nom_tournois.upper()}-----")
+    def title_players_tournament(nom_tournois):
+        print(f"\n-----JOUEURS DU TOURNOI {nom_tournois.upper()}-----")
 
     @staticmethod
-    def titre_end_round():
-        print()
-        print("-----FINIR ET RENSEIGNER UN ROUND-----")
+    def title_tournament_infos(nom_tournois):
+        print(f"\n-----TOUTES LES INFOS DU TOURNOI {nom_tournois.upper()}-----")
+
+    @staticmethod
+    def title_end_round():
+        print("\n-----FINIR ET RENSEIGNER UN ROUND-----")
 
     @staticmethod
     def point_explanation():
@@ -77,28 +73,15 @@ class MenuTournament:
 
     @staticmethod
     def input_result_duels():
-        result = input('Résultat du duel: ')
-        return result
+        return input('Résultat du duel: ')
 
     @staticmethod
     def title_round_result(numero_round):
-        print()
-        print(f"-----RESULTATS ROUND {numero_round}-----")
+        print(f"\n-----RESULTATS ROUND {numero_round}-----")
 
     @staticmethod
     def title_round_4():
-        print()
-        print("-----RÉSULTAT ROUND 4-----")
-
-    @staticmethod
-    def end_date_round_4():
-        end_date = input("Date et heure de fin du Round 4: ")
-        return end_date
-
-    @staticmethod
-    def start_date_round_1():
-        start_date = input("Date et heure de début du Round 1: ")
-        return start_date
+        print("\n-----RÉSULTAT ROUND 4-----")
 
     @staticmethod
     def error():
@@ -117,17 +100,24 @@ class MenuTournament:
         print("Aucun tournoi à afficher!")
 
     @staticmethod
-    def get_all_sorted_tournament_players(nom_tournoi):
+    def number_of_players():
+        while True:
+            try:
+                return int(input("Nombre de participants au tournoi: "))
+            except ValueError:
+                print("Veuillez saisir un chiffre!")
+
+    @staticmethod
+    def get_all_sorted_tournament_players(tournament_name):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
-                tournois_dict = data.get("_default", {})
-                for tournoi in tournois_dict.values():
-                    if tournoi.get("Nom") == nom_tournoi:
-                        players_and_score = tournoi.get("Joueurs", [])
+                tournament_dict = data.get("_default", {})
+                for tournamant in tournament_dict.values():
+                    if tournamant.get("Nom") == tournament_name:
+                        players_and_score = tournamant.get("Joueurs", [])
                         players = [item[0] for item in players_and_score]
-                        players.sort()
-                        print(players)
+                        print(players.sort())
                         break
                 else:
                     MenuTournament.tournament_does_not_exist()
@@ -137,14 +127,14 @@ class MenuTournament:
             MenuTournament.error()
 
     @staticmethod
-    def show_informations_tournament(nom_tournoi):
+    def show_informations_tournament(tournament_name):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
-                tournois_dict = data.get("_default", {})
-                for tournoi in tournois_dict.values():
-                    if tournoi.get("Nom") == nom_tournoi:
-                        print(tournoi)
+                tournament_dict = data.get("_default", {})
+                for tournament in tournament_dict.values():
+                    if tournament.get("Nom") == tournament_name:
+                        print(tournament)
                         break
                 else:
                     MenuTournament.tournament_does_not_exist()
@@ -165,14 +155,14 @@ class MenuTournament:
                       "Numéro de tour:", tournament_data["Numéro de tour"])
 
     @staticmethod
-    def show_duel_informations(nom_tournoi):
+    def show_duel_informations(tournament_name):
         try:
             with open('databasetournament.json') as json_file:
                 data = json.load(json_file)
-                tournois_dict = data.get("_default", {})
-                for tournoi in tournois_dict.values():
-                    if tournoi.get("Nom") == nom_tournoi:
-                        duels = list(tournoi.items())
+                tournament_dict = data.get("_default", {})
+                for tournament in tournament_dict.values():
+                    if tournament.get("Nom") == tournament_name:
+                        duels = list(tournament.items())
                         print(duels[0], duels[-1])
                         break
                 else:

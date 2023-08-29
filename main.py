@@ -1,6 +1,6 @@
-from Controler.Principal import MainMenu
-from Modele.Joueur import DataBasePlayers
-from Modele.Tournois import DataBaseTournament
+from controler.principal import MainMenu
+from modele.player import DataBasePlayers
+from modele.tournament import DataBaseTournament
 
 databasetournament = DataBaseTournament()
 databaseplayer = DataBasePlayers()
