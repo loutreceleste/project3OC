@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 ## Launch
 
-Open in the console, navigate through the folders of the computer in order to find yourself in the root of the "project4OC" folder.<br />
+Open the console, navigate through the folders of the computer in order to find yourself in the root of the "project4OC" folder.<br />
 
 Once in the folder, run the command:
 
@@ -27,7 +27,17 @@ Once in the folder, run the command:
 python3 main.py
 ```
 
-The software will launch and you can start browsing and interacting with it.
+The software will launch, and you can start browsing and interacting with it.<br />
+Please make sure to read all the instruction and the information asked for a good utilization of the software.
+
+## Flake8_HTML
+
+To generate another flake8-html report please first deleate the current report "flake8_rapport" in the "project4OC" folder, then open the console, navigate through the folders of the computer in order to find yourself in the root of the "project4OC" folder and run the next command:
+
+```bash
+python3 -m flake8 --format=html --htmldir=flake8_rapport
+```
+The report will be created with the "flake8_rapport" name.
 
 ## Requirements
 

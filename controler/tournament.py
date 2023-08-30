@@ -164,13 +164,13 @@ class TournamentMenu(AllViewMenu):
 
                     # Part of creating new duels which have not yet been played.
                     i = 0
-                    while i < len(players) - 1:
+                    while i < len(sorted_players) - 1:
                         # We notice that we don't have found a unique duel already.
                         unique_duel_found = False
 
-                        for j in range(i + 1, len(players)):
+                        for j in range(i + 1, len(sorted_players)):
                             # Create a random duel for start.
-                            new_duel = [players[i][0], players[j][0], 0]
+                            new_duel = [sorted_players[i][0], sorted_players[j][0], 0]
                             # Will ask the database if the duel is already done or not.
                             duel_already_done = any(
                                 (new_duel[:2] == match[:2] or new_duel[:2] == match[1::-1]) for match in all_matches)
@@ -178,23 +178,26 @@ class TournamentMenu(AllViewMenu):
                             # If duel not already done it will remouve the players and append the new duel in the list.
                             if not duel_already_done:
                                 duels.append(new_duel)
-                                players.pop(j)
-                                players.pop(i)
+                                sorted_players.pop(j)
+                                sorted_players.pop(i)
                                 # Change unique_duel_found in True to stop the precesus and switch to next duel.
                                 unique_duel_found = True
                                 break
 
                         # If no unique duel found it will force to make a duel no matter if it already donne or not.
                         if not unique_duel_found:
-                            forced_duel = [players[i][0], players[i + 1][0], 0]
+                            forced_duel = [sorted_players[i][0], sorted_players[i + 1][0], 0]
                             duels.append(forced_duel)
-                            players.pop(i + 1)
-                            players.pop(i)
+                            sorted_players.pop(i + 1)
+                            sorted_players.pop(i)
+
+                    # The first one is going to be empty.
+                    sorted_players2 = sorted(players, reverse=True, key=lambda item: item[1])
 
                     for tournament_id, tournament_data in data["_default"].items():
                         if tournament_data["Nom"] == tournament_name:
                             tournament_data["Liste des tours"][-players_half:] = last_matches
-                            tournament_data["Joueurs"] = sorted_players
+                            tournament_data["Joueurs"] = sorted_players2
                             tournament_data["Liste des tours"] += duels
                             tournament_data["Numéro de tour"] += 1
                     modele.tournament.Tournament.write_in_database_tournament(data)
