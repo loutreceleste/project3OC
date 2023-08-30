@@ -75,6 +75,7 @@ class TournamentMenu(AllViewMenu):
                 if user_choice == "1":
                     tournament_name = MenuTournament.tournament_name()
                     view.tournament.MenuTournament.title_tournament_infos(tournament_name)
+                    view.tournament.MenuTournament.point_explanation()
                     view.tournament.MenuTournament.show_all_informations_tournament(tournament_name)
                     TournamentMenu()
 
@@ -89,6 +90,7 @@ class TournamentMenu(AllViewMenu):
                 elif user_choice == "3":
                     tournament_name = MenuTournament.tournament_name()
                     view.tournament.MenuTournament.title_duel_tournament(tournament_name)
+                    view.tournament.MenuTournament.point_explanation()
                     view.tournament.MenuTournament.show_duel_informations(tournament_name)
                     TournamentMenu()
 
@@ -222,23 +224,23 @@ class TournamentMenu(AllViewMenu):
                         match[-1] = num
                         if num == 1:
                             winnner = match[0]
-                            for players in players:
-                                if players[0] == winnner:
-                                    players[1] += 1
+                            for player in players:
+                                if player[0] == winnner:
+                                    player[1] += 1
                         if num == 2:
                             winnner = match[1]
-                            for players in players:
-                                if players[0] == winnner:
-                                    players[1] += 1
+                            for player in players:
+                                if player[0] == winnner:
+                                    player[1] += 1
                         if num == 3:
                             winnner1 = match[0]
                             winnner2 = match[1]
-                            for players in players:
-                                if players[0] == winnner1:
-                                    players[1] += 0.5
-                            for players in players:
-                                if players[0] == winnner2:
-                                    players[1] += 0.5
+                            for player in players:
+                                if player[0] == winnner1:
+                                    player[1] += 0.5
+                            for player in players:
+                                if player[0] == winnner2:
+                                    player[1] += 0.5
 
                     # Sorting the players according to their points.
                     sorted_players = sorted(players, reverse=True, key=lambda item: item[1])

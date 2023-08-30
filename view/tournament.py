@@ -24,7 +24,7 @@ class MenuTournament:
 
     @staticmethod
     def tournament_participants():
-        numero_ine = input("Numéro INE du joueur: ")
+        numero_ine = input("Nom et numéro INE du joueur: ")
         score = 0
         return numero_ine, score
 
